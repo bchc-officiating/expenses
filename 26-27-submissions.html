@@ -331,6 +331,30 @@
     text-transform:none;color:#828A91;margin-top:3px;
   }
 
+  /* compact variant: hugs its label instead of spanning the page */
+  .checkline.compact{
+    display:inline-flex;align-items:center;gap:9px;
+    padding:9px 14px 9px 12px;width:auto;
+  }
+  .checkline.compact input{width:18px;height:18px;margin:0;}
+  .checkline.compact .txt{font-size:13.5px;}
+  #oneWayWrap .sub{
+    display:block;font-family:'Barlow',sans-serif;font-size:12px;
+    color:#828A91;margin-top:6px;
+  }
+
+  /* rate band reference panels */
+  .panel-note.bands{align-items:flex-start;}
+  .panel-note.bands b{
+    font-family:'Barlow Semi Condensed',sans-serif;letter-spacing:0.6px;
+    text-transform:uppercase;font-size:13px;
+  }
+  .panel-note.bands em{
+    display:block;font-style:normal;font-variant-numeric:tabular-nums;
+    margin-top:4px;padding-left:2px;
+  }
+  .panel-note.bands em:first-of-type{margin-top:7px;}
+
   /* file input */
   input[type="file"]{
     width:100%;font-family:'Barlow',sans-serif;font-size:13.5px;
@@ -372,7 +396,7 @@
   }
   .autoval .amt{
     font-family:'Teko', sans-serif;font-size:26px;font-weight:600;
-    line-height:1;color:var(--money);
+    line-height:1;color:var(--money);white-space:nowrap;
   }
   .autoval .amt.zero{color:#828A91;}
   .autoval .note{
@@ -759,25 +783,27 @@
           </div>
         </div>
 
-        <div class="field">
-          <label for="homeTeam">Home Team<span class="req">*</span></label>
-          <select id="homeTeam" name="homeTeam" required>
-            <option value="" disabled selected>Select the home team&hellip;</option>
-          </select>
-        </div>
-        <div class="field conditional" id="homeOtherWrap">
-          <label for="homeTeamOther">Other Team Name<span class="req">*</span></label>
-          <input type="text" id="homeTeamOther" name="homeTeamOther">
+        <div class="row">
+          <div class="field">
+            <label for="homeTeam">Home Team<span class="req">*</span></label>
+            <select id="homeTeam" name="homeTeam" required>
+              <option value="" disabled selected>Select the home team&hellip;</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="visitingTeam">Visiting Team<span class="req">*</span></label>
+            <select id="visitingTeam" name="visitingTeam" required>
+              <option value="" disabled selected>Select the visiting team&hellip;</option>
+            </select>
+          </div>
         </div>
 
-        <div class="field">
-          <label for="visitingTeam">Visiting Team<span class="req">*</span></label>
-          <select id="visitingTeam" name="visitingTeam" required>
-            <option value="" disabled selected>Select the visiting team&hellip;</option>
-          </select>
+        <div class="field conditional" id="homeOtherWrap">
+          <label for="homeTeamOther">Home Team Name<span class="req">*</span></label>
+          <input type="text" id="homeTeamOther" name="homeTeamOther">
         </div>
         <div class="field conditional" id="visitingOtherWrap">
-          <label for="visitingTeamOther">Other Team Name<span class="req">*</span></label>
+          <label for="visitingTeamOther">Visiting Team Name<span class="req">*</span></label>
           <input type="text" id="visitingTeamOther" name="visitingTeamOther">
         </div>
 
@@ -821,18 +847,26 @@
           </select>
         </div>
 
-        <!-- Mileage / rider fee route -->
+        <!-- Route -->
         <div class="conditional" id="routeWrap">
           <div class="route-head">
             <span class="rt" id="routeHeadTitle">Mileage</span>
-            <button type="button" class="help-btn" id="mileageHelpBtn" aria-label="How to claim mileage">?</button>
+            <button type="button" class="help-btn conditional" id="mileageHelpBtn" aria-label="How to claim mileage">?</button>
           </div>
 
-          <div class="field">
-            <label for="travelFrom" id="travelFromLabel">Mileage From<span class="req">*</span></label>
-            <select id="travelFrom" name="travelFrom">
-              <option value="" disabled selected>Select a location&hellip;</option>
-            </select>
+          <div class="row">
+            <div class="field">
+              <label for="travelFrom" id="travelFromLabel">Mileage From<span class="req">*</span></label>
+              <select id="travelFrom" name="travelFrom">
+                <option value="" disabled selected>Select a location&hellip;</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="travelTo" id="travelToLabel">Mileage To<span class="req">*</span></label>
+              <select id="travelTo" name="travelTo">
+                <option value="" disabled selected>Select a location&hellip;</option>
+              </select>
+            </div>
           </div>
 
           <div class="conditional" id="viaWrap">
@@ -840,65 +874,76 @@
             <button type="button" class="btn-dashed sm" id="addViaBtn">+ Add a stop along the way</button>
           </div>
 
-          <div class="field">
-            <label for="travelTo" id="travelToLabel">Mileage To<span class="req">*</span></label>
-            <select id="travelTo" name="travelTo">
-              <option value="" disabled selected>Select a location&hellip;</option>
-            </select>
-          </div>
-
           <div class="field conditional" id="oneWayWrap">
-            <label class="checkline" for="oneWay">
+            <label class="checkline compact" for="oneWay">
               <input type="checkbox" id="oneWay" name="oneWay">
-              <span class="txt">One way travel only
-                <em id="oneWayHint">Tick this only if you did not make the return trip.</em>
-              </span>
+              <span class="txt">Travelled One Way</span>
             </label>
+            <span class="sub" id="oneWayHint">Tick this only if you did not make the return trip.</span>
           </div>
 
-          <div class="field">
+          <div class="field conditional" id="mileageAmountWrap">
             <div class="autoval">
               <span class="lbl" id="routeAmountLabel">Mileage</span>
               <span class="amt zero" id="routeAmount">$0.00</span>
-              <span class="note" id="routeAmountNote">Calculated from the BCHC travel chart once you pick both locations.</span>
+              <span class="note" id="routeAmountNote">Calculated from the BCHC travel chart once you pick every location.</span>
             </div>
           </div>
         </div>
 
-        <!-- Per diem (automatic, from the travel charts) -->
-        <div class="field conditional" id="perDiemWrap">
+        <!-- One way distance, used to read the per diem and rider fee bands -->
+        <div class="field conditional" id="kmWrap">
           <div class="autoval">
-            <span class="lbl">Per diem</span>
-            <span class="amt zero" id="perDiemAmount">$0.00</span>
-            <span class="note" id="perDiemNote">Calculated from the BCHC per diem chart once you pick both locations.</span>
+            <span class="lbl">One way distance</span>
+            <span class="amt zero" id="kmAmount">&mdash;</span>
+            <span class="note" id="kmNote">Shown once you pick every location.</span>
           </div>
         </div>
 
-        <!-- Additional meals -->
-        <div class="field">
-          <label class="checkline" for="extraMeals">
-            <input type="checkbox" id="extraMeals" name="extraMeals">
-            <span class="txt">Did you require additional meals?
-              <em>Only tick this if you needed meals beyond the per diem allotment above.</em>
+        <!-- Rider fee (interior passengers) -->
+        <div class="conditional" id="riderWrap">
+          <div class="panel-note bands">
+            <span aria-hidden="true">&#9873;</span>
+            <span><b>Rider Fee:</b> Based on one-way kms travelled
+              <em>141km&ndash;250km &mdash; $20</em>
+              <em>251km+ &mdash; $40</em>
             </span>
-          </label>
+          </div>
+          <div class="field">
+            <label for="riderFee">Rider fee claimed</label>
+            <select id="riderFee" name="riderFee">
+              <option value="" selected>No rider fee claimed</option>
+              <option value="20">$20</option>
+              <option value="40">$40</option>
+            </select>
+          </div>
         </div>
 
-        <div class="conditional" id="extraMealsDetail">
+        <!-- Per diems -->
+        <div class="conditional" id="perDiemWrap">
+          <div class="panel-note bands">
+            <span aria-hidden="true">&#9873;</span>
+            <span><b>Per Diems:</b> Based on one-way kms travelled
+              <em>91km&ndash;220km &mdash; 1 meal ($23)</em>
+              <em>221km&ndash;400km &mdash; 2 meals ($46)</em>
+              <em>400km+ &mdash; 3 meals ($69)</em>
+              <em>Overnight trip &mdash; additional per diems permitted</em>
+            </span>
+          </div>
           <div class="field">
-            <label for="extraMealsCount">How many additional meals did you require beyond the above allotment?<span class="req">*</span>
-              <span class="sub">Each meal is worth $23.00.</span>
+            <label for="perDiemCount">Number of per diems claimed<span class="req">*</span>
+              <span class="sub">Each per diem is worth $23.00.</span>
             </label>
-            <select id="extraMealsCount" name="extraMealsCount">
+            <select id="perDiemCount" name="perDiemCount">
               <option value="" disabled selected>Select a number&hellip;</option>
+              <option value="0">0</option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
             </select>
-          </div>
-          <div class="field">
-            <label for="extraMealsReason">Reason for additional meals<span class="req">*</span></label>
-            <textarea id="extraMealsReason" name="extraMealsReason" class="reason" placeholder="For example: overnight stay extended by a weather delay."></textarea>
           </div>
         </div>
 
@@ -1017,18 +1062,6 @@
       </div>
       <div class="modal-body">
         <p>Claim from the city center your trip started to the furthest city center your travels took you.</p>
-        <p>For multiple day trips, claim round trip mileage for the first day from your home to the destination you finished. The second day (and beyond if necessary) claim the mileage from where you started that day, to where you travelled to.</p>
-        <div class="eg">
-          <b>Example &mdash; multiple day trip</b>
-          <ul>
-            <li>Friday &mdash; Kelowna to Kimberley (stayed in Cranbrook).
-              <ul><li>Claim Kelowna to Cranbrook round trip mileage.</li></ul>
-            </li>
-            <li>Saturday &mdash; worked a game in Beaver Valley.
-              <ul><li>Claim Cranbrook to Beaver Valley round trip mileage.</li></ul>
-            </li>
-          </ul>
-        </div>
         <p>If you are required to travel outside of your direct path to pick up an official(s) for a game, you may add a segment to cover that additional mileage.</p>
         <div class="eg">
           <b>Example &mdash; picking up an official</b>
@@ -1063,7 +1096,7 @@
      Paste the deployed Apps Script Web App URL between the quotes below.
      Everything else in this section is a rate you can edit in one place.
      ===================================================================== */
-  var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxzkrrIYdUwTI-agA93SlvsulAGSbs2GrgX7fkTSzeZcW4xs5BqyvJsOvTTbTp14BgHA/exec";
+  var GOOGLE_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 
   var REFEREE_FEE        = 160;   // Referee game fee
   var LINESPERSON_FEE    = 120;   // Linesperson game fee
@@ -1130,18 +1163,15 @@
   var CITIES = ["LML R1 (Abbotsford)", "LML R2 (Chilliwack)", "LML R3 (Burnaby)", "LML R4 (Richmond)", "LML R5 (Ridge Meadows)", "LML R6 (Surrey)", "LML R7 (West Vancouver)", "Beaver Valley", "Calgary", "Columbia Valley", "Cranbrook", "Fernie", "Grand Forks", "Trail", "Kamloops", "Kelowna", "Kimberley", "Lethbridge", "Merritt", "Nelson", "Osoyoos", "Penticton", "Prince George", "Princeton", "Quesnel", "Revelstoke", "Salmon Arm", "Summerland", "Sunshine Coast", "Vernon", "Williams Lake"];
   var MILEAGE_RT = "0,25,35,0,0,35,575,900,765,770,865,455,470,285,320,795,1080,200,540,330,330,720,215,600,495,390,330,50,370,480,45,55,30,25,55,540,870,730,740,835,425,440,255,290,765,1050,170,510,300,300,690,185,570,465,360,300,70,340,445,0,0,0,0,630,940,820,825,920,510,525,345,375,850,1140,260,595,390,390,780,275,660,555,450,385,15,425,530,15,0,0,640,955,830,850,945,530,545,355,395,875,1150,270,615,400,400,790,285,670,565,460,405,15,445,550,0,10,625,925,800,810,905,490,505,325,350,835,1120,240,575,370,370,760,255,640,535,430,370,15,410,515,0,615,945,805,815,910,495,510,330,360,840,1125,245,580,375,375,765,260,645,540,435,375,15,415,520,650,925,840,850,945,530,545,365,395,875,1160,280,615,410,410,800,295,680,575,470,410,15,450,510,590,350,215,310,140,0,505,340,245,515,470,70,260,310,1000,365,900,290,385,340,665,375,780,275,390,295,700,600,625,600,400,220,690,610,710,660,780,760,880,400,500,645,940,540,900,130,210,455,360,485,460,120,420,565,365,580,525,750,650,860,270,370,510,855,410,765,95,320,225,600,525,0,300,645,230,445,500,875,555,985,395,495,520,865,565,890,420,320,695,620,120,210,740,325,540,595,950,655,1060,470,570,620,960,615,970,105,365,200,350,620,330,140,125,185,885,240,765,345,310,200,545,245,645,470,300,595,530,425,70,220,280,995,330,870,275,370,300,560,335,750,170,600,820,85,460,290,230,525,180,405,220,110,225,380,115,290,550,800,125,340,130,65,680,170,560,195,110,55,410,50,445,325,675,260,510,535,865,560,975,380,595,550,890,530,880,900,530,750,810,985,860,1100,610,710,825,1175,750,1100,465,205,155,610,90,490,440,195,135,295,175,315,265,325,980,380,860,250,350,340,630,335,740,60,760,115,640,320,230,45,425,170,520,650,115,590,280,170,0,425,110,470,645,120,990,640,695,815,640,235,525,345,225,170,310,165,400,870,510,570,695,520,115,105,245,590,145,490,150,485,55,395,425,95,495,465,525,400";
   var MILEAGE_OW = "0,12.5,17.5,0,0,17.5,287.5,450,382.5,385,432.5,227.5,235,142.5,160,397.5,540,100,270,165,165,360,107.5,300,247.5,195,165,25,185,240,22.5,27.5,15,12.5,27.5,270,435,365,370,417.5,212.5,220,127.5,145,382.5,525,85,255,150,150,345,92.5,285,232.5,180,150,35,170,222.5,0,0,0,0,315,470,410,412.5,460,255,262.5,172.5,187.5,425,570,130,297.5,195,195,390,137.5,330,277.5,225,192.5,7.5,212.5,265,7.5,0,0,320,477.5,415,425,472.5,265,272.5,177.5,197.5,437.5,575,135,307.5,200,200,395,142.5,335,282.5,230,202.5,7.5,222.5,275,0,5,312.5,462.5,400,405,452.5,245,252.5,162.5,175,417.5,560,120,287.5,185,185,380,127.5,320,267.5,215,185,7.5,205,257.5,0,307.5,472.5,402.5,407.5,455,247.5,255,165,180,420,562.5,122.5,290,187.5,187.5,382.5,130,322.5,270,217.5,187.5,7.5,207.5,260,325,462.5,420,425,472.5,265,272.5,182.5,197.5,437.5,580,140,307.5,205,205,400,147.5,340,287.5,235,205,7.5,225,255,295,175,107.5,155,70,0,252.5,170,122.5,257.5,235,35,130,155,500,182.5,450,145,192.5,170,332.5,187.5,390,137.5,195,147.5,350,300,312.5,300,200,110,345,305,355,330,390,380,440,200,250,322.5,470,270,450,65,105,227.5,180,242.5,230,60,210,282.5,182.5,290,262.5,375,325,430,135,185,255,427.5,205,382.5,47.5,160,112.5,300,262.5,0,150,322.5,115,222.5,250,437.5,277.5,492.5,197.5,247.5,260,432.5,282.5,445,210,160,347.5,310,60,105,370,162.5,270,297.5,475,327.5,530,235,285,310,480,307.5,485,52.5,182.5,100,175,310,165,70,62.5,92.5,442.5,120,382.5,172.5,155,100,272.5,160,322.5,235,150,297.5,265,212.5,35,110,140,497.5,165,435,137.5,185,150,280,167.5,375,85,300,410,42.5,230,145,115,262.5,90,202.5,110,55,112.5,190,57.5,145,275,400,62.5,170,65,32.5,340,85,280,97.5,55,27.5,205,25,222.5,162.5,337.5,130,255,267.5,432.5,280,487.5,190,297.5,275,445,265,440,450,265,375,405,492.5,430,550,305,355,412.5,587.5,375,550,232.5,102.5,77.5,305,45,245,220,97.5,67.5,147.5,87.5,157.5,132.5,162.5,490,190,430,125,175,170,315,167.5,370,30,380,57.5,320,160,115,22.5,212.5,85,260,325,57.5,295,140,85,0,212.5,55,235,322.5,60,495,320,347.5,407.5,320,117.5,262.5,172.5,112.5,85,155,82.5,200,435,255,285,347.5,260,57.5,52.5,122.5,295,72.5,245,75,242.5,27.5,197.5,212.5,47.5,247.5,232.5,262.5,200";
-  var RIDER_RT = "0,0,0,0,0,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,40,0,0,0,0,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,40,0,0,0,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,40,0,0,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,40,0,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,40,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,40,40,40,40,40,40,0,40,40,40,40,40,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,20,40,40,40,40,40,40,40,40,40,40,40,40,40,40,20,40,40,40,40,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,20,40,40,40,40,40,40,40,40,40,40,40,40,40,40,20,40,40,40,40,40,40,20,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,20,40,40,40,40,40,40,40,20,40,40,20,40,40,40,20,40,40,0,40,40,40,40,20,0,40,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,20,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,20,40,40,40,0,40,40,40,40,20,40,40,40,0,40,20,40,40,20,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,20,20,40,40,40,40,40,40,0,40,40,20,40,40,40,40";
-  var RIDER_OW = "0,0,0,0,0,0,40,40,40,40,40,40,40,40,40,40,40,20,40,40,40,40,20,40,40,40,40,0,40,40,0,0,0,0,0,40,40,40,40,40,40,40,40,40,40,40,20,40,40,40,40,20,40,40,40,40,0,40,40,0,0,0,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,40,0,0,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,40,0,0,40,40,40,40,40,40,40,40,40,40,40,20,40,40,40,40,40,40,40,40,40,0,40,40,0,40,40,40,40,40,40,40,40,40,40,40,20,40,40,40,40,40,40,40,40,40,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,40,40,40,20,40,0,0,40,40,20,40,40,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,20,40,40,40,40,40,40,40,40,40,40,40,40,40,0,20,40,40,40,40,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,20,40,40,0,40,40,20,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,0,20,40,40,40,40,40,40,40,40,40,40,40,40,40,0,40,20,40,40,40,0,0,20,40,20,40,40,40,20,40,40,40,40,40,40,40,40,0,20,40,40,40,40,40,40,40,40,40,40,20,40,40,0,40,40,20,40,20,40,20,0,20,40,0,40,40,40,0,40,0,0,40,20,40,20,0,0,40,0,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,20,20,40,0,40,40,20,0,40,20,40,40,40,40,40,40,20,40,40,40,40,40,0,40,0,40,40,20,0,40,20,40,40,0,40,40,20,0,40,0,40,40,0,40,40,40,40,40,20,40,40,20,20,40,20,40,40,40,40,40,40,0,0,20,40,20,40,20,40,0,40,40,0,40,40,40,40";
-  var PERDIEM_RT = "0,0,0,0,0,0,69,69,69,69,69,69,69,69,69,69,69,46,69,69,69,69,69,69,69,69,69,23,69,69,0,0,0,0,0,69,69,69,69,69,69,69,69,69,69,69,46,69,69,69,69,46,69,69,69,69,23,69,69,0,0,0,0,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,0,69,69,0,0,0,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,0,69,69,0,0,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,0,69,69,0,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,0,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,0,69,69,69,69,69,69,46,0,69,69,69,69,69,23,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,46,69,69,69,69,69,46,69,69,69,69,69,69,69,69,69,69,69,69,69,69,23,69,69,69,69,0,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,46,69,69,69,69,69,69,69,69,69,69,69,69,69,69,23,69,46,69,69,69,46,46,46,69,69,69,69,69,46,69,69,69,69,69,69,69,69,23,69,69,69,69,69,69,69,69,69,69,69,46,69,69,23,69,69,69,69,46,69,69,23,69,69,46,69,69,69,46,69,46,23,69,46,69,46,23,23,69,23,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,46,69,23,69,69,46,46,69,46,69,69,69,69,69,69,69,69,69,69,69,69,23,69,46,69,69,69,0,69,46,69,69,46,69,69,46,0,69,23,69,69,46,69,69,69,69,69,69,69,69,69,46,69,46,69,69,69,69,69,69,46,23,69,69,46,69,46,69,23,69,69,23,69,69,69,69";
-  var PERDIEM_OW = "0,0,0,0,0,0,69,69,69,69,69,69,69,46,46,69,69,23,69,46,46,69,23,69,69,46,46,0,46,69,0,0,0,0,0,69,69,69,69,69,69,69,46,46,69,69,23,69,46,46,69,23,69,69,46,46,0,46,69,0,0,0,0,69,69,69,69,69,69,69,46,46,69,69,46,69,46,46,69,46,69,69,69,46,0,69,69,0,0,0,69,69,69,69,69,69,69,46,46,69,69,46,69,46,46,69,46,69,69,69,69,0,69,69,0,0,69,69,69,69,69,69,69,46,46,69,69,46,69,46,46,69,46,69,69,69,46,0,69,69,0,69,69,69,69,69,69,69,46,46,69,69,46,69,46,46,69,46,69,69,69,46,0,69,69,69,69,69,69,69,69,69,46,46,69,69,46,69,69,69,69,46,69,69,69,69,0,69,69,69,46,23,46,0,0,69,46,46,69,69,0,46,46,69,46,69,46,46,46,69,46,69,46,46,46,69,69,69,69,46,23,69,69,69,69,69,69,69,46,69,69,69,69,69,23,23,69,46,69,69,23,69,69,46,69,69,69,69,69,46,46,69,69,69,69,23,46,46,69,69,0,46,69,46,69,69,69,69,69,46,69,69,69,69,69,69,46,69,69,23,23,69,46,69,69,69,69,69,69,69,69,69,69,69,23,46,23,46,69,69,23,23,23,69,46,69,46,46,23,69,46,69,69,46,69,69,46,0,23,46,69,46,69,46,46,46,69,46,69,23,69,69,0,69,46,46,69,23,69,23,23,46,46,23,46,69,69,23,46,23,0,69,23,69,23,23,0,46,0,69,46,69,46,69,69,69,69,69,46,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,69,23,23,69,0,69,69,23,23,46,23,46,46,46,69,46,69,46,46,46,69,46,69,0,69,23,69,46,46,0,69,23,69,69,23,69,46,23,0,69,23,69,69,23,69,69,69,69,69,46,69,46,46,23,46,23,46,69,69,69,69,69,23,23,46,69,23,69,23,69,0,46,69,23,69,69,69,46";
+
+  /* One way kilometres between each location, from Distances_ONEWAY_Final.xlsx.
+     Officials read the per diem and rider fee bands off this figure. */
+  var KM_ONEWAY = "0,25,35,0,0,35,575,900,765,770,865,455,470,285,320,795,1080,200,540,330,330,720,215,600,495,390,330,50,370,480,45,55,30,25,55,540,870,730,740,835,425,440,255,290,765,1050,170,510,300,300,690,185,570,465,360,300,70,340,445,0,0,0,0,630,940,820,825,920,510,525,345,375,850,1140,260,595,390,390,780,275,660,555,450,385,15,425,530,15,0,0,640,955,830,850,945,530,545,355,395,875,1150,270,615,400,400,790,285,670,565,460,405,15,445,550,0,10,625,925,800,810,905,490,505,325,350,835,1120,240,575,370,370,760,255,640,535,430,370,15,410,515,0,615,945,805,815,910,495,510,330,360,840,1125,245,580,375,375,765,260,645,540,435,375,15,415,520,650,925,840,850,945,530,545,365,395,875,1160,280,615,410,410,800,295,680,575,470,410,15,450,510,590,350,215,310,140,0,505,340,245,515,470,70,260,310,1000,365,900,290,385,340,665,375,780,275,390,295,700,600,625,600,400,220,690,610,710,660,780,760,880,400,500,645,940,540,900,130,210,455,360,485,460,120,420,565,365,580,525,750,650,860,270,370,510,855,410,765,95,320,225,600,525,0,300,645,230,445,500,875,555,985,395,495,520,865,565,890,420,320,695,620,120,210,740,325,540,595,950,655,1060,470,570,620,960,615,970,105,365,200,350,620,330,140,125,185,885,240,765,345,310,200,545,320,645,470,300,595,530,425,70,220,280,995,330,870,275,370,300,560,335,750,170,600,820,85,460,290,230,525,180,405,220,110,225,380,115,290,550,800,125,340,130,65,680,170,560,195,110,55,410,50,445,325,675,260,510,535,865,560,975,380,595,550,890,530,880,900,530,750,810,985,860,1100,610,710,825,1175,750,1100,465,205,155,610,90,490,440,195,135,295,175,315,265,325,980,380,860,250,350,340,630,335,740,60,760,115,640,320,230,45,425,170,520,650,115,590,280,170,0,425,110,470,645,120,990,640,695,815,640,235,525,345,225,170,310,165,400,870,510,570,695,520,115,105,245,590,145,490,150,485,55,395,425,95,495,465,525,400";
 
 
   var MILEAGE_RT_A = MILEAGE_RT.split(",");
-  var PERDIEM_RT_A = PERDIEM_RT.split(",");
-  var PERDIEM_OW_A = PERDIEM_OW.split(",");
   var MILEAGE_OW_A = MILEAGE_OW.split(",");
-  var RIDER_RT_A   = RIDER_RT.split(",");
-  var RIDER_OW_A   = RIDER_OW.split(",");
+  var KM_ONEWAY_A  = KM_ONEWAY ? KM_ONEWAY.split(",") : null;
 
   var CITY_INDEX = {};
   for(var ci=0; ci<CITIES.length; ci++){ CITY_INDEX[CITIES[ci]] = ci; }
@@ -1224,7 +1254,7 @@
       gameNumber:"", gameDate:"", homeTeam:"", homeTeamOther:"",
       visitingTeam:"", visitingTeamOther:"", role:"", hasTravel:"",
       travelMode:"", travelFrom:"", via:[], travelTo:"", oneWay:false,
-      extraMeals:false, extraMealsCount:"", extraMealsReason:"",
+      riderFee:"", perDiemCount:"",
       hotelReq:"", hotelAmount:"", hotelReceipt:null,
       ferryReq:"", ferryAmount:"", ferryReceipt:null
     };
@@ -1315,16 +1345,24 @@
     return sum;
   }
 
-  /* Per diem is set by where the trip started and where it finished, not by
-     the pick-up detours in between. */
-  function perDiemValue(g){
-    if(!g.travelFrom || !g.travelTo) return null;
-    return chartValue(g.oneWay ? PERDIEM_OW_A : PERDIEM_RT_A, canon(g.travelFrom), canon(g.travelTo));
+  /* One way distance along the whole route, used by the official to read the
+     per diem and rider fee bands. Returns null until the km chart is loaded. */
+  function oneWayKm(g){
+    if(!KM_ONEWAY_A) return null;
+    var stops = routeStops(g);
+    if(stops.length < 2) return null;
+    var sum = 0;
+    for(var i=0;i<stops.length-1;i++){
+      var v = chartValue(KM_ONEWAY_A, canon(stops[i]), canon(stops[i+1]));
+      if(v === null) return null;
+      sum += v;
+    }
+    return sum;
   }
 
   function compute(g){
     var lines = [];
-    var t = {gameFee:0, mileage:0, riderFee:0, perDiem:0, extraMeals:0, hotel:0, ferry:0};
+    var t = {gameFee:0, mileage:0, riderFee:0, perDiem:0, hotel:0, ferry:0};
 
     var info = teamInfo(g.homeTeam);
     var flow = info ? info.flow : null;
@@ -1368,40 +1406,25 @@
         }
       }
 
-      if(flow === "interior" && g.travelMode === "Passenger" && fromC && toC){
-        var r = chartValue(g.oneWay ? RIDER_OW_A : RIDER_RT_A, fromC, toC);
-        if(r !== null){
-          t.riderFee += r;
+      if(flow === "interior" && g.travelMode === "Passenger"){
+        var r = parseFloat(g.riderFee);
+        if(!isNaN(r) && r > 0){
+          t.riderFee = r;
           lines.push({
             label: "Rider fee \u2014 " + g.travelFrom + " to " + g.travelTo,
-            note: g.oneWay ? "One way" : "Round trip",
+            note: "Claimed by the official",
             value: r
           });
         }
       }
 
-      /* Per diem, straight off the chart for the trip's start and finish. */
-      var pd = perDiemValue(g);
-      if(pd !== null && pd > 0){
-        t.perDiem = pd;
+      var pdCount = parseInt(g.perDiemCount, 10);
+      if(!isNaN(pdCount) && pdCount > 0){
+        t.perDiem = pdCount * MEAL_RATE;
         lines.push({
-          label: "Per diem \u2014 " + g.travelFrom + " to " + g.travelTo,
-          note: (g.oneWay ? "One way" : "Round trip") + " \u00b7 " +
-                Math.round(pd / MEAL_RATE) + " meal" + (Math.round(pd / MEAL_RATE) === 1 ? "" : "s"),
-          value: pd
+          label: "Per diems \u2014 " + pdCount + " \u00d7 " + money(MEAL_RATE),
+          value: t.perDiem
         });
-      }
-
-      if(g.extraMeals){
-        var extra = parseInt(g.extraMealsCount, 10);
-        if(!isNaN(extra) && extra > 0){
-          t.extraMeals = extra * MEAL_RATE;
-          lines.push({
-            label: "Additional meals \u2014 " + extra + " \u00d7 " + money(MEAL_RATE),
-            note: (g.extraMealsReason || "").trim() || "No reason given",
-            value: t.extraMeals
-          });
-        }
       }
 
       if(flow === "coastal" && g.ferryReq === "Yes"){
@@ -1427,7 +1450,7 @@
       }
     }
 
-    t.total = t.gameFee + t.mileage + t.riderFee + t.perDiem + t.extraMeals + t.hotel + t.ferry;
+    t.total = t.gameFee + t.mileage + t.riderFee + t.perDiem + t.hotel + t.ferry;
     return {lines: lines, totals: t, flow: flow, claimingTravel: claimingTravel};
   }
 
@@ -1540,9 +1563,8 @@
     draft.via               = readVia();
     draft.travelTo          = $("travelTo").value;
     draft.oneWay            = $("oneWay").checked;
-    draft.extraMeals        = $("extraMeals").checked;
-    draft.extraMealsCount   = $("extraMealsCount").value;
-    draft.extraMealsReason  = $("extraMealsReason").value;
+    draft.riderFee          = $("riderFee").value;
+    draft.perDiemCount      = $("perDiemCount").value;
     draft.hotelReq          = $("hotelReq").value;
     draft.hotelAmount       = $("hotelAmount").value;
     draft.ferryReq          = $("ferryReq").value;
@@ -1565,9 +1587,8 @@
     $("travelTo").value          = draft.travelTo;
     $("oneWay").checked          = !!draft.oneWay;
     renderVia();                       /* then rebuild the pick-up stop rows */
-    $("extraMeals").checked      = !!draft.extraMeals;
-    $("extraMealsCount").value   = draft.extraMealsCount;
-    $("extraMealsReason").value  = draft.extraMealsReason;
+    $("riderFee").value          = draft.riderFee;
+    $("perDiemCount").value      = draft.perDiemCount;
     $("hotelReq").value          = draft.hotelReq;
     $("hotelAmount").value       = draft.hotelAmount;
     $("ferryReq").value          = draft.ferryReq;
@@ -1611,7 +1632,6 @@
         : "Tell us how you travelled, then add any meals and hotel costs.";
     }
 
-    show($("extraMealsDetail"), $("extraMeals").checked);
     show($("ferryWrap"), flow === "coastal");
     if(flow !== "coastal"){ $("ferryReq").value = ""; }
   }
@@ -1631,7 +1651,7 @@
       toList = fromList.slice();
     } else if(flow === "interior" && mode === "Passenger"){
       wantRoute = true; oneWayOK = true;
-      fromLabel = "Travelled From"; toLabel = "Travelled To"; amtLabel = "Rider fee";
+      fromLabel = "Travelled From"; toLabel = "Travelled To"; amtLabel = "Travel";
       fromList = LOCATIONS.map(function(l){ return l[0]; });
       toList = fromList.slice();
     } else if(flow === "coastal" && mode === "Driver"){
@@ -1653,14 +1673,16 @@
       renderVia();
     }
 
+    show($("mileageHelpBtn"), mode === "Driver");
+
     if(wantRoute){
       $("routeHeadTitle").textContent = amtLabel;
       $("travelFromLabel").innerHTML = fromLabel + '<span class="req">*</span>';
       $("travelToLabel").innerHTML   = toLabel + '<span class="req">*</span>';
-      $("routeAmountLabel").textContent = amtLabel;
-      $("oneWayHint").textContent = (amtLabel === "Rider fee")
-        ? "Tick this only if you rode one way. The one way rider fee chart is used instead."
-        : "Tick this only if you did not make the return trip. Half the round trip mileage is paid.";
+      $("routeAmountLabel").textContent = "Mileage";
+      $("oneWayHint").textContent = (mode === "Driver")
+        ? "Tick this only if you did not make the return trip. Half the round trip mileage is paid."
+        : "Tick this only if you did not make the return trip.";
       fillSelect($("travelFrom"), fromList, "Select a location\u2026");
       fillSelect($("travelTo"), toList, "Select a location\u2026");
       if(flow === "coastal" && mode === "Driver"){ $("travelTo").value = "Sunshine Coast"; }
@@ -1674,59 +1696,59 @@
     show($("hotelDetail"), $("hotelReq").value === "Yes");
     show($("ferryDetail"), $("ferryReq").value === "Yes");
 
-    /* Auto-calculated mileage / rider fee readout */
     var g = draft;
     var res = compute(g);
-    var amtEl = $("routeAmount"), noteEl = $("routeAmountNote");
     var fromC = canon(g.travelFrom), toC = canon(g.travelTo);
     var info = teamInfo(g.homeTeam);
     var flow = info ? info.flow : null;
-    var val = null, src = "";
 
-    if(flow === "interior" && g.travelMode === "Passenger"){
-      val = chartValue(g.oneWay ? RIDER_OW_A : RIDER_RT_A, fromC, toC);
-      src = g.oneWay ? "One way rider fee chart" : "Round trip rider fee chart";
-    } else if(g.travelMode === "Driver"){
+    /* --- mileage, drivers only --------------------------------------- */
+    var isDriver = g.travelMode === "Driver";
+    show($("mileageAmountWrap"), isDriver);
+    if(isDriver){
       var roundTrip = (flow === "coastal" || !g.oneWay);
-      val = routeMileage(g, roundTrip ? MILEAGE_RT_A : MILEAGE_OW_A);
-      src = roundTrip ? "Round trip mileage chart" : "One way mileage chart";
-    }
-
-    if(val === null){
-      amtEl.textContent = money(0);
-      amtEl.classList.add("zero");
-      noteEl.textContent = "Calculated from the BCHC travel chart once you pick every location.";
-    } else {
-      amtEl.textContent = money(val);
-      amtEl.classList.toggle("zero", val === 0);
-      noteEl.textContent = (val === 0 && fromC === toC && !(g.via || []).filter(Boolean).length)
-        ? "Same start and finish, so nothing is payable."
-        : src + " \u00b7 " + routeText(g);
-    }
-
-    /* Per diem readout */
-    var pdShow = !!(g.travelMode && fromC && toC);
-    show($("perDiemWrap"), pdShow);
-    if(pdShow){
-      var pd = perDiemValue(g);
-      var pdAmt = $("perDiemAmount"), pdNote = $("perDiemNote");
-      if(pd === null){
-        pdAmt.textContent = money(0);
-        pdAmt.classList.add("zero");
-        pdNote.textContent = "Calculated from the BCHC per diem chart once you pick both locations.";
+      var val = routeMileage(g, roundTrip ? MILEAGE_RT_A : MILEAGE_OW_A);
+      var amtEl = $("routeAmount"), noteEl = $("routeAmountNote");
+      var src = roundTrip ? "Round trip mileage chart" : "One way mileage chart";
+      if(val === null){
+        amtEl.textContent = money(0);
+        amtEl.classList.add("zero");
+        noteEl.textContent = "Calculated from the BCHC travel chart once you pick every location.";
       } else {
-        var count = Math.round(pd / MEAL_RATE);
-        pdAmt.textContent = money(pd);
-        pdAmt.classList.toggle("zero", pd === 0);
-        pdNote.textContent = pd === 0
-          ? "No per diem is payable on this trip."
-          : (g.oneWay ? "One way" : "Round trip") + " per diem chart \u00b7 " +
-            count + " meal" + (count === 1 ? "" : "s") + " covered \u00b7 " +
-            g.travelFrom + " to " + g.travelTo;
+        amtEl.textContent = money(val);
+        amtEl.classList.toggle("zero", val === 0);
+        noteEl.textContent = (val === 0 && fromC === toC && !(g.via || []).filter(Boolean).length)
+          ? "Same start and finish, so nothing is payable."
+          : src + " \u00b7 " + routeText(g);
       }
     }
 
-    show($("extraMealsDetail"), $("extraMeals").checked);
+    /* --- one way distance -------------------------------------------- */
+    var routeChosen = !!(g.travelMode && fromC && toC);
+    show($("kmWrap"), routeChosen);
+    if(routeChosen){
+      var km = oneWayKm(g);
+      var kmEl = $("kmAmount"), kmNote = $("kmNote");
+      if(km === null){
+        kmEl.textContent = "\u2014";
+        kmEl.classList.add("zero");
+        kmNote.textContent = KM_ONEWAY_A
+          ? "No distance on file for this route."
+          : "One way distance chart not loaded yet \u2014 see the README.";
+      } else {
+        kmEl.textContent = Math.round(km) + " km";
+        kmEl.classList.toggle("zero", km === 0);
+        kmNote.textContent = "One way \u00b7 " + routeText(g) +
+          " \u00b7 use this to read the bands below.";
+      }
+    }
+
+    /* --- rider fee, interior passengers only -------------------------- */
+    show($("riderWrap"), flow === "interior" && g.travelMode === "Passenger");
+
+    /* --- per diems, whenever travel is being claimed ------------------- */
+    show($("perDiemWrap"), !!g.travelMode);
+
     return res;
   }
 
@@ -1976,13 +1998,8 @@
         }
       }
 
-      if(draft.extraMeals){
-        if(!draft.extraMealsCount){
-          return fail("errGame", "Please select how many additional meals you required.", $("extraMealsCount"));
-        }
-        if(!(draft.extraMealsReason || "").trim()){
-          return fail("errGame", "Please give a reason for the additional meals.", $("extraMealsReason"));
-        }
+      if(draft.perDiemCount === ""){
+        return fail("errGame", "Please select how many per diems you are claiming, or choose 0.", $("perDiemCount"));
       }
 
       if(flow === "coastal"){
@@ -2187,13 +2204,12 @@
         viaStops: res.claimingTravel ? (g.via || []).filter(Boolean).join(" > ") : "",
         travelTo: res.claimingTravel ? (g.travelTo || "") : "",
         oneWay: (res.claimingTravel && g.oneWay) ? "Yes" : "No",
+        oneWayKm: res.claimingTravel ? (oneWayKm(g) === null ? "" : Math.round(oneWayKm(g))) : "",
         gameFee: t.gameFee,
         mileageAmount: t.mileage,
         riderFee: t.riderFee,
+        perDiemCount: res.claimingTravel ? (parseInt(g.perDiemCount, 10) || 0) : 0,
         perDiem: t.perDiem,
-        extraMealCount: (res.claimingTravel && g.extraMeals) ? (parseInt(g.extraMealsCount, 10) || 0) : 0,
-        additionalMeals: t.extraMeals,
-        extraMealReason: (res.claimingTravel && g.extraMeals) ? (g.extraMealsReason || "").trim() : "",
         hotelAmount: t.hotel,
         ferryAmount: t.ferry,
         gameTotal: t.total,
