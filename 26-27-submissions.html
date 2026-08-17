@@ -285,7 +285,10 @@
     background:var(--paper);color:var(--ink);
     transition:border-color .15s, background .15s, box-shadow .15s;
   }
-  input[type="date"]{min-height:46px;-webkit-appearance:none;appearance:none;}
+  /* one shared control height, so a field beside a two-line label still lines up */
+  input[type="text"],input[type="email"],input[type="tel"],
+  input[type="date"],select{min-height:46px;}
+  input[type="date"]{-webkit-appearance:none;appearance:none;}
   input:focus,select:focus,textarea:focus,button:focus-visible,
   .checkline:focus-within{
     outline:none;border-color:var(--ice);background:var(--white);
@@ -343,17 +346,14 @@
     color:#828A91;margin-top:6px;
   }
 
-  /* rate band reference panels */
-  .panel-note.bands{align-items:flex-start;}
-  .panel-note.bands b{
-    font-family:'Barlow Semi Condensed',sans-serif;letter-spacing:0.6px;
-    text-transform:uppercase;font-size:13px;
-  }
-  .panel-note.bands em{
-    display:block;font-style:normal;font-variant-numeric:tabular-nums;
-    margin-top:4px;padding-left:2px;
-  }
-  .panel-note.bands em:first-of-type{margin-top:7px;}
+  /* rate bands, shown as sub text beneath a field label */
+  .sub.bands{margin-top:5px;}
+  .sub.bands .ln{display:block;font-variant-numeric:tabular-nums;line-height:1.5;}
+  .sub.bands .ln.gap{margin-top:6px;}
+
+  /* side-by-side fields: keep the inputs on one line even when one label
+     wraps to two rows */
+  .row{align-items:end;}
 
   /* file input */
   input[type="file"]{
@@ -902,17 +902,16 @@
 
         <!-- Rider fee (interior passengers) -->
         <div class="conditional" id="riderWrap">
-          <div class="panel-note bands">
-            <span aria-hidden="true">&#9873;</span>
-            <span><b>Rider Fee:</b> Based on one-way kms travelled
-              <em>141km&ndash;250km &mdash; $20</em>
-              <em>251km+ &mdash; $40</em>
-            </span>
-          </div>
           <div class="field">
-            <label for="riderFee">Rider fee claimed</label>
+            <label for="riderFee">Rider Fee
+              <span class="sub bands">
+                <span class="ln">Based on one-way kms travelled</span>
+                <span class="ln">141km&ndash;250km &mdash; $20</span>
+                <span class="ln">251km+ &mdash; $40</span>
+              </span>
+            </label>
             <select id="riderFee" name="riderFee">
-              <option value="" selected>No rider fee claimed</option>
+              <option value="" selected>No rider fee</option>
               <option value="20">$20</option>
               <option value="40">$40</option>
             </select>
@@ -921,18 +920,9 @@
 
         <!-- Per diems -->
         <div class="conditional" id="perDiemWrap">
-          <div class="panel-note bands">
-            <span aria-hidden="true">&#9873;</span>
-            <span><b>Per Diems:</b> Based on one-way kms travelled
-              <em>91km&ndash;220km &mdash; 1 meal ($23)</em>
-              <em>221km&ndash;400km &mdash; 2 meals ($46)</em>
-              <em>400km+ &mdash; 3 meals ($69)</em>
-              <em>Overnight trip &mdash; additional per diems permitted</em>
-            </span>
-          </div>
           <div class="field">
-            <label for="perDiemCount">Number of per diems claimed<span class="req">*</span>
-              <span class="sub">Each per diem is worth $23.00.</span>
+            <label for="perDiemCount">Number of Per Diems<span class="req">*</span>
+              <span class="sub bands" id="perDiemBands"></span>
             </label>
             <select id="perDiemCount" name="perDiemCount">
               <option value="" disabled selected>Select a number&hellip;</option>
@@ -1748,6 +1738,14 @@
 
     /* --- per diems, whenever travel is being claimed ------------------- */
     show($("perDiemWrap"), !!g.travelMode);
+    $("perDiemBands").innerHTML = (flow === "coastal")
+      ? '<span class="ln">All officials travelling to Coastal will receive 2 meal per diems ($46)</span>' +
+        '<span class="ln gap">If an overnight trip is required, submission for additional Per Diems is permitted</span>'
+      : '<span class="ln">Based on one-way kms travelled</span>' +
+        '<span class="ln">91km\u2013220km \u2014 1 meal ($23)</span>' +
+        '<span class="ln">221km\u2013400km \u2014 2 meals ($46)</span>' +
+        '<span class="ln">400km+ \u2014 3 meals ($69)</span>' +
+        '<span class="ln gap">Overnight trip \u2014 additional per diems permitted</span>';
 
     return res;
   }
