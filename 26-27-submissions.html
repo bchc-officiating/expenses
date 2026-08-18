@@ -605,6 +605,12 @@
     color:var(--steel-light);font-size:15px;max-width:48ch;
     margin:0 auto;line-height:1.6;
   }
+  .confirm p a{
+    color:var(--ice);text-decoration:none;
+    border-bottom:1px solid rgba(79,199,227,0.45);
+  }
+  .confirm p a:hover{border-bottom-color:var(--ice);}
+  .confirm p a{color:var(--ice);text-decoration:underline;}
   .confirm-summary{
     border:1px solid rgba(255,255,255,0.15);border-radius:5px;
     padding:14px 16px;margin:22px auto 0;max-width:440px;text-align:left;
@@ -1033,7 +1039,7 @@
         <div class="spacer"></div>
         <button type="submit" class="btn btn-go" id="submitBtn">Submit expenses</button>
       </div>
-      <div class="nav-hint" style="margin-top:10px;">A copy of this claim is emailed to you and to BCHC accounting as soon as you submit.</div>
+      <div class="nav-hint" style="margin-top:10px;">A copy of this claim is emailed to you as soon as you submit.</div>
       <div class="form-error" id="errReview" role="alert"></div>
     </div>
 
@@ -1043,7 +1049,7 @@
   <div class="confirm" id="confirmPanel">
     <div class="puck-icon" aria-hidden="true">&#10003;</div>
     <h2>Expenses submitted</h2>
-    <p>Your claim is in. A copy has been emailed to <b id="confirmEmail"></b> and to BCHC accounting. Keep your receipts until the payment lands.</p>
+    <p>Your expense claim has been submitted. A copy has been emailed to <b id="confirmEmail"></b>. Please keep your receipts until the payment is made for this claim. Questions regarding expenses can be directed to <a href="mailto:mike@bchchockey.ca">mike@bchchockey.ca</a>.</p>
     <div class="confirm-summary" id="confirmSummary"></div>
     <div class="confirm-actions">
       <button type="button" class="btn btn-go" id="againBtn">Submit another claim</button>
@@ -1094,7 +1100,7 @@
      Paste the deployed Apps Script Web App URL between the quotes below.
      Everything else in this section is a rate you can edit in one place.
      ===================================================================== */
-  var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQw-FB11ufJgxRKR5ZUwCtr7c_qqmYeih3nFHtJMKA0LJtOFKqlq9Br4MRBJ6KbTz2/exec";
+  var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3ouRM9vjt7nYsIc4ZG_m_0FkOqeuKZU8smaU5TrxkZRADO3HvTpcD8K2RU1GE5Xle/exec";
 
   var REFEREE_FEE        = 160;   // Referee game fee
   var LINESPERSON_FEE    = 120;   // Linesperson game fee
@@ -1104,7 +1110,7 @@
   var MAX_GAMES          = 20;
   var MAX_VIA_STOPS      = 3;     // Pick-up stops allowed on one mileage claim
   var MAX_FILE_BYTES     = 8 * 1024 * 1024;
-  var SUPPORT_EMAIL      = "accounting@bchchockey.ca";
+  var SUPPORT_EMAIL      = "mike@bchchockey.ca";
 
   /* =====================================================================
      2. TEAMS
