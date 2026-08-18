@@ -101,30 +101,6 @@
   }
   .page-subtitle{font-size:15px;color:#4B5763;margin-top:10px;max-width:100%;line-height:1.5;}
 
-  /* ---------- GUIDELINES DOWNLOAD ---------- */
-  .guide-link{
-    display:inline-flex;align-items:center;gap:10px;margin-top:16px;
-    background:var(--white);border:1.5px solid var(--line);border-radius:5px;
-    padding:10px 14px;text-decoration:none;color:var(--ink);
-    transition:border-color .15s, box-shadow .15s;
-  }
-  .guide-link:hover{border-color:var(--ice);box-shadow:0 0 0 3px var(--ice-dim);}
-  .guide-link .ic{
-    width:34px;height:34px;flex-shrink:0;border-radius:4px;
-    background:var(--ink);color:var(--ice);
-    display:flex;align-items:center;justify-content:center;
-  }
-  .guide-link .ic svg{width:19px;height:19px;}
-  .guide-link .tx{
-    font-family:'Barlow Semi Condensed', sans-serif;font-size:13px;
-    font-weight:600;letter-spacing:0.5px;text-transform:uppercase;line-height:1.25;
-  }
-  .guide-link .tx em{
-    display:block;font-style:normal;font-family:'Barlow',sans-serif;
-    font-size:12px;font-weight:400;letter-spacing:0;text-transform:none;
-    color:#6B7580;margin-top:2px;
-  }
-
   /* ---------- HELP BUTTON + MODAL ---------- */
   .route-head{
     display:flex;align-items:center;gap:9px;margin:0 0 14px;
@@ -354,11 +330,19 @@
   /* side-by-side fields: keep the inputs on one line even when one label
      wraps to two rows */
   .row{align-items:end;}
+  .row > .field{min-width:0;}
+  /* .top aligns the pair from the top instead, for rows where one side has
+     helper text underneath (receipt uploads) */
+  .row.top{align-items:start;}
+
+  /* dropdowns that only need to be as wide as their longest option */
+  .field.narrow select{width:auto;min-width:150px;max-width:100%;}
 
   /* file input */
   input[type="file"]{
-    width:100%;font-family:'Barlow',sans-serif;font-size:13.5px;
-    padding:9px 12px;border:1.5px dashed var(--steel-light);
+    width:100%;max-width:100%;font-family:'Barlow',sans-serif;font-size:13.5px;
+    min-height:46px;line-height:24px;padding:9px 12px;
+    border:1.5px dashed var(--steel-light);
     border-radius:4px;background:var(--paper);color:#3A4550;cursor:pointer;
   }
   input[type="file"]::file-selector-button{
@@ -676,7 +660,6 @@
     .grand .v{font-size:34px;}
     .modal{padding:14px 10px;}
     .modal-body{padding:16px;font-size:14px;}
-    .guide-link{width:100%;}
   }
 </style>
 </head>
@@ -697,14 +680,6 @@
     <div class="eyebrow-top">2026&ndash;27 Season</div>
     <h1 class="page-title">BCHC Officials Expense Submission Form</h1>
     <p class="page-subtitle" id="pageSubtitle">Claim your game fees and travel expenses. Add every game you are claiming for in one submission &mdash; your running total is shown at the bottom of the screen as you go. A copy is emailed to you when you submit.</p>
-    <a class="guide-link" id="guidelinesLink" href="./BCHockey_26-27_TravelExpenses.xlsx" download>
-      <span class="ic" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="14" x2="15" y2="20"></line><line x1="15" y1="14" x2="9" y2="20"></line></svg>
-      </span>
-      <span class="tx">Travel Expense Guidelines
-        <em>BC Hockey 2026&ndash;27 full reference chart &middot; XLSX</em>
-      </span>
-    </a>
   </div>
 
   <div class="rink-divider" aria-hidden="true">
@@ -807,13 +782,23 @@
           <input type="text" id="visitingTeamOther" name="visitingTeamOther">
         </div>
 
-        <div class="field">
-          <label for="role">Referee or Linesperson?<span class="req">*</span></label>
-          <select id="role" name="role" required>
-            <option value="" disabled selected>Select your position&hellip;</option>
-            <option value="Referee">Referee &mdash; $160</option>
-            <option value="Linesperson">Linesperson &mdash; $120</option>
-          </select>
+        <div class="row">
+          <div class="field">
+            <label for="role">Referee or Linesperson?<span class="req">*</span></label>
+            <select id="role" name="role" required>
+              <option value="" disabled selected>Select your position&hellip;</option>
+              <option value="Referee">Referee &mdash; $160</option>
+              <option value="Linesperson">Linesperson &mdash; $120</option>
+            </select>
+          </div>
+          <div class="field conditional" id="travelWrap">
+            <label for="hasTravel">Did you incur travel expenses for this game?<span class="req">*</span></label>
+            <select id="hasTravel" name="hasTravel">
+              <option value="" disabled selected>Select yes or no&hellip;</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
         </div>
 
         <div class="conditional" id="lowerMainlandNote">
@@ -822,15 +807,6 @@
             <span id="lowerMainlandNoteText"></span>
           </div>
         </div>
-
-        <div class="field conditional" id="travelWrap">
-          <label for="hasTravel">Did you incur travel expenses for this game?<span class="req">*</span></label>
-          <select id="hasTravel" name="hasTravel">
-            <option value="" disabled selected>Select yes or no&hellip;</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-        </div>
       </div>
 
       <!-- SECTION 3 -->
@@ -838,7 +814,7 @@
         <h2 class="section-eyebrow"><span class="tag">03</span> Expense Information</h2>
         <p class="section-hint" id="section3Hint"></p>
 
-        <div class="field">
+        <div class="field narrow">
           <label for="travelMode">Driver or Passenger?<span class="req">*</span></label>
           <select id="travelMode" name="travelMode">
             <option value="" disabled selected>Select one&hellip;</option>
@@ -902,7 +878,7 @@
 
         <!-- Rider fee (interior passengers) -->
         <div class="conditional" id="riderWrap">
-          <div class="field">
+          <div class="field narrow">
             <label for="riderFee">Rider Fee
               <span class="sub bands">
                 <span class="ln">Based on one-way kms travelled</span>
@@ -920,7 +896,7 @@
 
         <!-- Per diems -->
         <div class="conditional" id="perDiemWrap">
-          <div class="field">
+          <div class="field narrow">
             <label for="perDiemCount">Number of Per Diems<span class="req">*</span>
               <span class="sub bands" id="perDiemBands"></span>
             </label>
@@ -939,7 +915,7 @@
 
         <!-- Ferry (coastal only) -->
         <div class="conditional" id="ferryWrap">
-          <div class="field">
+          <div class="field narrow">
             <label for="ferryReq">Ferry required?<span class="req">*</span></label>
             <select id="ferryReq" name="ferryReq">
               <option value="" disabled selected>Select yes or no&hellip;</option>
@@ -948,23 +924,25 @@
             </select>
           </div>
           <div class="conditional" id="ferryDetail">
-            <div class="field">
-              <label for="ferryAmount">Ferry amount<span class="req">*</span></label>
-              <div class="money-wrap">
-                <span aria-hidden="true">$</span>
-                <input type="text" id="ferryAmount" name="ferryAmount" inputmode="decimal" placeholder="0.00" autocomplete="off">
+            <div class="row top">
+              <div class="field">
+                <label for="ferryAmount">Ferry amount<span class="req">*</span></label>
+                <div class="money-wrap">
+                  <span aria-hidden="true">$</span>
+                  <input type="text" id="ferryAmount" name="ferryAmount" inputmode="decimal" placeholder="0.00" autocomplete="off">
+                </div>
               </div>
-            </div>
-            <div class="field">
-              <label for="ferryReceipt">Ferry receipt</label>
-              <input type="file" id="ferryReceipt" name="ferryReceipt" accept="image/*,application/pdf">
-              <div class="file-state" id="ferryReceiptState">Photo or PDF, up to 8 MB.</div>
+              <div class="field">
+                <label for="ferryReceipt">Ferry receipt</label>
+                <input type="file" id="ferryReceipt" name="ferryReceipt" accept="image/*,application/pdf">
+                <div class="file-state" id="ferryReceiptState">Photo or PDF, up to 8 MB.</div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Hotel -->
-        <div class="field">
+        <div class="field narrow">
           <label for="hotelReq">Did you pay for a hotel stay?<span class="req">*</span></label>
           <select id="hotelReq" name="hotelReq">
             <option value="" disabled selected>Select yes or no&hellip;</option>
@@ -973,17 +951,19 @@
           </select>
         </div>
         <div class="conditional" id="hotelDetail">
-          <div class="field">
-            <label for="hotelAmount">Hotel amount<span class="req">*</span></label>
-            <div class="money-wrap">
-              <span aria-hidden="true">$</span>
-              <input type="text" id="hotelAmount" name="hotelAmount" inputmode="decimal" placeholder="0.00" autocomplete="off">
+          <div class="row top">
+            <div class="field">
+              <label for="hotelAmount">Hotel amount<span class="req">*</span></label>
+              <div class="money-wrap">
+                <span aria-hidden="true">$</span>
+                <input type="text" id="hotelAmount" name="hotelAmount" inputmode="decimal" placeholder="0.00" autocomplete="off">
+              </div>
             </div>
-          </div>
-          <div class="field">
-            <label for="hotelReceipt">Hotel receipt</label>
-            <input type="file" id="hotelReceipt" name="hotelReceipt" accept="image/*,application/pdf">
-            <div class="file-state" id="hotelReceiptState">Photo or PDF, up to 8 MB.</div>
+            <div class="field">
+              <label for="hotelReceipt">Hotel receipt</label>
+              <input type="file" id="hotelReceipt" name="hotelReceipt" accept="image/*,application/pdf">
+              <div class="file-state" id="hotelReceiptState">Photo or PDF, up to 8 MB.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1052,7 +1032,7 @@
       </div>
       <div class="modal-body">
         <p>Claim from the city center your trip started to the furthest city center your travels took you.</p>
-        <p>If you are required to travel outside of your direct path to pick up an official(s) for a game, you may add a segment to cover that additional mileage.</p>
+        <p id="modalSegmentLine">If you are required to travel outside of your direct path to pick up an official(s) for a game, you may add a segment to cover that additional mileage.</p>
         <div class="eg">
           <b>Example &mdash; picking up an official</b>
           <ul>
@@ -1061,7 +1041,7 @@
             </li>
           </ul>
         </div>
-        <p style="margin-bottom:0;color:#6B7580;font-size:13.5px;">Use <b>Add a stop along the way</b> on the form to enter a pick-up. Each leg is priced separately from the travel chart and added together.</p>
+        <p style="margin-bottom:0;color:#6B7580;font-size:13.5px;">Use <b>Add a stop along the way</b> on the form to enter a pick-up. <span id="modalFootLine">Each leg is priced separately from the travel chart and added together.</span></p>
       </div>
     </div>
   </div>
@@ -1086,7 +1066,7 @@
      Paste the deployed Apps Script Web App URL between the quotes below.
      Everything else in this section is a rate you can edit in one place.
      ===================================================================== */
-  var GOOGLE_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+  var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQw-FB11ufJgxRKR5ZUwCtr7c_qqmYeih3nFHtJMKA0LJtOFKqlq9Br4MRBJ6KbTz2/exec";
 
   var REFEREE_FEE        = 160;   // Referee game fee
   var LINESPERSON_FEE    = 120;   // Linesperson game fee
@@ -1097,10 +1077,6 @@
   var MAX_VIA_STOPS      = 3;     // Pick-up stops allowed on one mileage claim
   var MAX_FILE_BYTES     = 8 * 1024 * 1024;
   var SUPPORT_EMAIL      = "accounting@bchchockey.ca";
-
-  /* Where the BC Hockey travel expense reference workbook lives. Keep the
-     .xlsx next to index.html in the repo, or swap this for a Drive link. */
-  var GUIDELINES_URL     = "./BCHockey_26-27_TravelExpenses.xlsx";
 
   /* =====================================================================
      2. TEAMS
@@ -1654,8 +1630,9 @@
     show($("oneWayWrap"), wantRoute && oneWayOK);
     if(!oneWayOK){ $("oneWay").checked = false; }
 
-    /* Pick-up stops only make sense when mileage is being paid per leg. */
-    var wantVia = wantRoute && mode === "Driver";
+    /* Pick-up stops apply to drivers and passengers alike: for drivers each
+       leg is paid, for passengers each leg counts toward the distance. */
+    var wantVia = wantRoute;
     show($("viaWrap"), wantVia);
     viaOptions = fromList.slice();
     if(!wantVia && draft.via && draft.via.length){
@@ -1663,7 +1640,13 @@
       renderVia();
     }
 
-    show($("mileageHelpBtn"), mode === "Driver");
+    show($("mileageHelpBtn"), wantRoute);
+    $("modalSegmentLine").textContent = "If you are required to travel outside of your " +
+      "direct path to pick up an official(s) for a game, you may add a segment to cover " +
+      (mode === "Driver" ? "that additional mileage." : "that additional kms travelled.");
+    $("modalFootLine").textContent = (mode === "Driver")
+      ? "Each leg is priced separately from the travel chart and added together."
+      : "Each leg is measured separately and added together.";
 
     if(wantRoute){
       $("routeHeadTitle").textContent = amtLabel;
@@ -2316,10 +2299,8 @@
   });
 
   /* =====================================================================
-     15. MILEAGE HELP MODAL + GUIDELINES LINK
+     15. MILEAGE HELP MODAL
      ===================================================================== */
-  $("guidelinesLink").setAttribute("href", GUIDELINES_URL);
-
   var modal = $("mileageModal");
   var lastFocus = null;
 
