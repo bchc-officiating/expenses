@@ -941,6 +941,34 @@
           </div>
         </div>
 
+        <!-- Ferry terminal parking (coastal only) -->
+        <div class="conditional" id="parkingWrap">
+          <div class="field narrow">
+            <label for="parkingReq">Did you pay for Ferry Terminal Parking?<span class="req">*</span></label>
+            <select id="parkingReq" name="parkingReq">
+              <option value="" disabled selected>Select yes or no&hellip;</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="conditional" id="parkingDetail">
+            <div class="row top">
+              <div class="field">
+                <label for="parkingAmount">Parking amount<span class="req">*</span></label>
+                <div class="money-wrap">
+                  <span aria-hidden="true">$</span>
+                  <input type="text" id="parkingAmount" name="parkingAmount" inputmode="decimal" placeholder="0.00" autocomplete="off">
+                </div>
+              </div>
+              <div class="field">
+                <label for="parkingReceipt">Parking receipt</label>
+                <input type="file" id="parkingReceipt" name="parkingReceipt" accept="image/*,application/pdf">
+                <div class="file-state" id="parkingReceiptState">Photo or PDF, up to 8 MB.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Hotel -->
         <div class="field narrow">
           <label for="hotelReq">Did you pay for a hotel stay?<span class="req">*</span></label>
@@ -1222,7 +1250,8 @@
       travelMode:"", travelFrom:"", via:[], travelTo:"", oneWay:false,
       riderFee:"", perDiemCount:"",
       hotelReq:"", hotelAmount:"", hotelReceipt:null,
-      ferryReq:"", ferryAmount:"", ferryReceipt:null
+      ferryReq:"", ferryAmount:"", ferryReceipt:null,
+      parkingReq:"", parkingAmount:"", parkingReceipt:null
     };
   }
 
@@ -1328,7 +1357,7 @@
 
   function compute(g){
     var lines = [];
-    var t = {gameFee:0, mileage:0, riderFee:0, perDiem:0, hotel:0, ferry:0};
+    var t = {gameFee:0, mileage:0, riderFee:0, perDiem:0, hotel:0, ferry:0, parking:0};
 
     var info = teamInfo(g.homeTeam);
     var flow = info ? info.flow : null;
@@ -1404,6 +1433,17 @@
         }
       }
 
+      if(flow === "coastal" && g.parkingReq === "Yes"){
+        t.parking = parseMoney(g.parkingAmount);
+        if(t.parking > 0){
+          lines.push({
+            label: "Ferry terminal parking",
+            note: g.parkingReceipt ? "Receipt attached" : "No receipt attached",
+            value: t.parking
+          });
+        }
+      }
+
       if(g.hotelReq === "Yes"){
         t.hotel = parseMoney(g.hotelAmount);
         if(t.hotel > 0){
@@ -1416,7 +1456,7 @@
       }
     }
 
-    t.total = t.gameFee + t.mileage + t.riderFee + t.perDiem + t.hotel + t.ferry;
+    t.total = t.gameFee + t.mileage + t.riderFee + t.perDiem + t.hotel + t.ferry + t.parking;
     return {lines: lines, totals: t, flow: flow, claimingTravel: claimingTravel};
   }
 
@@ -1535,6 +1575,8 @@
     draft.hotelAmount       = $("hotelAmount").value;
     draft.ferryReq          = $("ferryReq").value;
     draft.ferryAmount       = $("ferryAmount").value;
+    draft.parkingReq        = $("parkingReq").value;
+    draft.parkingAmount     = $("parkingAmount").value;
   }
 
   function writeDraft(){
@@ -1559,10 +1601,14 @@
     $("hotelAmount").value       = draft.hotelAmount;
     $("ferryReq").value          = draft.ferryReq;
     $("ferryAmount").value       = draft.ferryAmount;
+    $("parkingReq").value        = draft.parkingReq;
+    $("parkingAmount").value     = draft.parkingAmount;
     $("hotelReceipt").value      = "";
     $("ferryReceipt").value      = "";
+    $("parkingReceipt").value    = "";
     setFileState("hotel");
     setFileState("ferry");
+    setFileState("parking");
     applyVisibility();
   }
 
@@ -1594,12 +1640,16 @@
     show($("section3"), s3);
     if(s3){
       $("section3Hint").textContent = (flow === "coastal")
-        ? "Coastal Tsunami home games. Tell us how you travelled, then add any meals, ferry and hotel costs."
+        ? "Coastal Tsunami home games. Tell us how you travelled, then add any meals, ferry, parking and hotel costs."
         : "Tell us how you travelled, then add any meals and hotel costs.";
     }
 
     show($("ferryWrap"), flow === "coastal");
-    if(flow !== "coastal"){ $("ferryReq").value = ""; }
+    show($("parkingWrap"), flow === "coastal");
+    if(flow !== "coastal"){
+      $("ferryReq").value = "";
+      $("parkingReq").value = "";
+    }
   }
 
   /* Driver / passenger drives the location pickers. */
@@ -1668,6 +1718,7 @@
   function applyVisibility(){
     show($("hotelDetail"), $("hotelReq").value === "Yes");
     show($("ferryDetail"), $("ferryReq").value === "Yes");
+    show($("parkingDetail"), $("parkingReq").value === "Yes");
 
     var g = draft;
     var res = compute(g);
@@ -1798,6 +1849,7 @@
   }
   wireFile("hotel");
   wireFile("ferry");
+  wireFile("parking");
 
   /* =====================================================================
      9. LIVE TRACKER
@@ -1988,6 +2040,12 @@
         if(draft.ferryReq === "Yes" && parseMoney(draft.ferryAmount) <= 0){
           return fail("errGame", "Please enter the ferry amount you paid.", $("ferryAmount"));
         }
+        if(!draft.parkingReq){
+          return fail("errGame", "Please tell us whether you paid for ferry terminal parking.", $("parkingReq"));
+        }
+        if(draft.parkingReq === "Yes" && parseMoney(draft.parkingAmount) <= 0){
+          return fail("errGame", "Please enter the parking amount you paid.", $("parkingAmount"));
+        }
       }
 
       if(!draft.hotelReq) return fail("errGame", "Please tell us whether a hotel was required.", $("hotelReq"));
@@ -2033,6 +2091,7 @@
       var att = [];
       if(g.hotelReceipt) att.push("Hotel receipt: " + g.hotelReceipt.name);
       if(g.ferryReceipt) att.push("Ferry receipt: " + g.ferryReceipt.name);
+      if(g.parkingReceipt) att.push("Parking receipt: " + g.parkingReceipt.name);
       if(att.length){
         html += '<div class="attach-list"><b>Attached</b>' + esc(att.join(" \u00b7 ")) + '</div>';
       }
@@ -2142,7 +2201,7 @@
   });
 
   /* Money boxes: digits and one decimal point only */
-  ["hotelAmount","ferryAmount"].forEach(function(id){
+  ["hotelAmount","ferryAmount","parkingAmount"].forEach(function(id){
     $(id).addEventListener("input", function(){
       var v = this.value.replace(/[^0-9.]/g, "");
       var bits = v.split(".");
@@ -2195,8 +2254,10 @@
         ferryAmount: t.ferry,
         gameTotal: t.total,
         lineSummary: summary,
+        parkingAmount: t.parking,
         hotelReceipt: g.hotelReceipt || null,
-        ferryReceipt: g.ferryReceipt || null
+        ferryReceipt: g.ferryReceipt || null,
+        parkingReceipt: g.parkingReceipt || null
       });
     }
 
